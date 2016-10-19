@@ -18,9 +18,6 @@
       "description": "Duplicate the current tab"
     }
   },
-  "permissions": [
-    "activeTab"
-  ],
   "applications": {
     "gecko": {
       "id": "duplicate-tab@firefox.stefansundin.com",
