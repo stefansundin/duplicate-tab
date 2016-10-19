@@ -4,6 +4,11 @@
   "description": "Press Ctrl+Shift+D to duplicate the current tab (Command+Shift+D on Mac).",
   "homepage_url": "https://github.com/stefansundin/duplicate-tab",
   "author": "Stefan Sundin",
+  "icons": {
+    "16": "img/icon16.png",
+    "48": "img/icon48.png",
+    "128": "img/icon128.png"
+  },
   "background": {
     "scripts": ["background.js"]
   },
