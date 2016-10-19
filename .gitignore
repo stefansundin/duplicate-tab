@@ -1,0 +1,9 @@
+Thumbs.db
+*.DS_Store
+*.swp
+
+web-ext-artifacts
+/*.crx
+/*.xpi
+/*.zip
+/*.pem
