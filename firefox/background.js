@@ -7,7 +7,10 @@ chrome.commands.getAll(function(commands) {
 chrome.commands.onCommand.addListener(function(command) {
   if (command == "duplicate-tab") {
     console.log("Duplicating tab..");
-    chrome.tabs.query({active: true}, function(tabs) {
+    chrome.tabs.query({
+      currentWindow: true,
+      active: true,
+    }, function(tabs) {
       var tab = tabs[0]
       console.log(tab);
       chrome.tabs.duplicate(tab.id);
