@@ -1,7 +1,7 @@
 {
   "name": "Duplicate Tab Shortcut",
-  "version": "1.0.1",
-  "description": "Press Ctrl+Shift+D to duplicate the current tab (Command+Shift+D on Mac).",
+  "version": "1.0.3",
+  "description": "Press Alt+Shift+D to duplicate the current tab (Option+Shift+D on Mac).",
   "homepage_url": "https://github.com/stefansundin/duplicate-tab",
   "author": "Stefan Sundin",
   "icons": {
@@ -14,7 +14,7 @@
   },
   "commands": {
     "duplicate-tab": {
-      "suggested_key": { "default": "Ctrl+Shift+D" },
+      "suggested_key": { "default": "Alt+Shift+D" },
       "description": "Duplicate the current tab"
     }
   },
