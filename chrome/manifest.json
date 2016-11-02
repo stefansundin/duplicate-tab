@@ -12,6 +12,14 @@
   "background": {
     "scripts": ["background.js"]
   },
+  "browser_action": {
+    "default_icon": {
+      "19": "img/icon19.png",
+      "38": "img/icon38.png"
+    },
+    "default_title": "Configure Duplicate Tab Shortcut",
+    "default_popup": "popup.html"
+  },
   "commands": {
     "duplicate-tab": {
       "suggested_key": { "default": "Alt+Shift+D" },
