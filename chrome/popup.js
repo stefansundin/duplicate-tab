@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function() {
     commands.forEach(function(command) {
       if (command.name == "duplicate-tab") {
         var shortcut = document.getElementById("shortcut");
-        shortcut.innerText = command.shortcut || "not set";
+        shortcut.textContent = command.shortcut || "not set";
       }
     });
   });
