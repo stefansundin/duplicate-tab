@@ -9,3 +9,15 @@ chrome.commands.onCommand.addListener(function(command) {
     });
   }
 });
+
+chrome.contextMenus.onClicked.addListener(function(info, tab) {
+  if (info.menuItemId == "duplicate-tab") {
+    chrome.tabs.duplicate(tab.id);
+  }
+})
+
+chrome.contextMenus.create({
+  id: "duplicate-tab",
+  title: "Duplicate",
+  contexts: ["tab"],
+});
