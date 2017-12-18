@@ -23,13 +23,28 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 
   var background = document.getElementById("background");
-  chrome.storage.sync.get(default_options, function(items) {
-    background.checked = items.background;
+  chrome.storage.sync.get(default_options, function(options) {
+    background.checked = options.background;
+    if (options.background) {
+      chrome.permissions.contains({
+        permissions: ["tabs"]
+      }, function(result) {
+        if (!result) {
+          background.checked = false;
+        }
+      });
+    }
     background.addEventListener("change", function() {
-      var new_options = {
-        background: background.checked
-      };
-      chrome.storage.sync.set(new_options);
+      if (background.checked) {
+        // requesting optional permissions will close the popup, so we'll have to delegate that to the background page
+        chrome.runtime.sendMessage({ action: "request-tabs-permissions" });
+      }
+      else {
+        var new_options = {
+          background: background.checked
+        };
+        chrome.storage.sync.set(new_options);
+      }
     });
   });
 });
