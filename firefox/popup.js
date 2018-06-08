@@ -40,6 +40,19 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   });
 
+  // bind enter key to save button
+  chrome.commands.getAll(function(commands) {
+    commands.forEach(function(command) {
+      var shortcut = document.getElementById(`${command.name}-shortcut`);
+      if (!shortcut) return;
+      shortcut.addEventListener("keyup", function(e) {
+        if (e.keyCode == 13) {
+          save.click();
+        }
+      });
+    });
+  });
+
   var background = document.getElementById("background");
   chrome.storage.sync.get(default_options, function(options) {
     background.checked = options.background;
