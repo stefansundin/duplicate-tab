@@ -14,7 +14,9 @@ chrome.runtime.onMessage.addListener(
           };
           chrome.storage.sync.set(new_options);
         }
+        sendResponse(granted);
       });
+      return true;
     }
   }
 );

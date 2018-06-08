@@ -1,5 +1,5 @@
 body {
-  width: 375px;
-  height: 300px;
+  min-width: 425px;
+  min-height: 300px;
   font-size: large;
 }

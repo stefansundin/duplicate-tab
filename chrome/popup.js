@@ -22,23 +22,44 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 
   var background = document.getElementById("background");
+  var revoke = document.getElementById("revoke");
+
   chrome.storage.sync.get(default_options, function(options) {
     background.checked = options.background;
-    if (options.background) {
-      chrome.permissions.contains({
-        permissions: ["tabs"]
-      }, function(result) {
-        if (!result) {
-          background.checked = false;
-        }
-      });
-    }
+
+    chrome.permissions.contains({
+      permissions: ["tabs"]
+    }, function(result) {
+      revoke.disabled = !result;
+      if (!result) {
+        background.checked = false;
+      }
+    });
+
     background.addEventListener("change", function() {
       if (background.checked) {
         // requesting optional permissions will close the popup, so we'll have to delegate that to the background page
-        chrome.runtime.sendMessage({ action: "request-tabs-permissions" });
+        chrome.runtime.sendMessage({ action: "request-tabs-permissions" }, null, function(granted) {
+          revoke.disabled = !granted;
+          background.checked = granted;
+        });
       }
       else {
+        var new_options = {
+          background: background.checked
+        };
+        chrome.storage.sync.set(new_options);
+      }
+    });
+  });
+
+  revoke.addEventListener("click", function() {
+    chrome.permissions.remove({
+      permissions: ["tabs"]
+    }, function(removed) {
+      if (removed) {
+        revoke.disabled = true;
+        background.checked = false;
         var new_options = {
           background: background.checked
         };
