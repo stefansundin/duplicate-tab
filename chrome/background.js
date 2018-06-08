@@ -60,4 +60,22 @@ chrome.commands.onCommand.addListener(function(command) {
       }
     });
   }
+  else if (command == "duplicate-to-new-window") {
+    // we need tabs permission to get access to tab.url
+    chrome.permissions.request({
+      permissions: ["tabs"]
+    }, function(granted) {
+      if (granted) {
+        chrome.tabs.query({
+          currentWindow: true,
+          active: true,
+        }, function(tabs) {
+          var tab = tabs[0];
+          chrome.windows.create({
+            url: tab.url,
+          });
+        });
+      }
+    });
+  }
 });

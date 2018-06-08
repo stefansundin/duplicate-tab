@@ -32,4 +32,15 @@ chrome.commands.onCommand.addListener(function(command) {
       }
     });
   }
+  else if (command == "duplicate-to-new-window") {
+    chrome.tabs.query({
+      currentWindow: true,
+      active: true,
+    }, function(tabs) {
+      var tab = tabs[0];
+      chrome.windows.create({
+        url: tab.url,
+      });
+    });
+  }
 });

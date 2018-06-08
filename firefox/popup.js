@@ -2,32 +2,47 @@ var default_options = {
   background: false
 };
 
-document.addEventListener("DOMContentLoaded", function() {
-  var shortcut = document.getElementById("shortcut");
+function refresh_shortcuts() {
   chrome.commands.getAll(function(commands) {
     commands.forEach(function(command) {
-      if (command.name == "duplicate-tab") {
-        shortcut.value = command.shortcut;
-      }
+      var shortcut = document.getElementById(`${command.name}-shortcut`);
+      if (!shortcut) return;
+      shortcut.value = command.shortcut || "";
     });
   });
+}
 
-  var save = document.getElementById("shortcut");
-  save.addEventListener("change", async function() {
+document.addEventListener("DOMContentLoaded", function() {
+  refresh_shortcuts();
+
+  var save = document.getElementById("save");
+  save.addEventListener("click", async function() {
     document.getElementById("error").innerText = "";
     try {
-      await browser.commands.update({
-        name: "duplicate-tab",
-        shortcut: shortcut.value
-      });
+      var all_commands = ["duplicate-tab", "duplicate-to-new-window"];
+      for (var i=0; i < all_commands.length; i++) {
+        var command = all_commands[i];
+        var shortcut = document.getElementById(`${command}-shortcut`);
+        if (!shortcut) continue;
+        if (shortcut.value == "") {
+          await browser.commands.reset(command);
+        }
+        else {
+          await browser.commands.update({
+            name: command,
+            shortcut: shortcut.value
+          });
+        }
+      }
+      refresh_shortcuts();
     } catch (e) {
       document.getElementById("error").innerText = e.toString();
     }
   });
 
   var background = document.getElementById("background");
-  chrome.storage.sync.get(default_options, function(items) {
-    background.checked = items.background;
+  chrome.storage.sync.get(default_options, function(options) {
+    background.checked = options.background;
     background.addEventListener("change", function() {
       var new_options = {
         background: background.checked

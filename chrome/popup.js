@@ -15,10 +15,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
   chrome.commands.getAll(function(commands) {
     commands.forEach(function(command) {
-      if (command.name == "duplicate-tab") {
-        var shortcut = document.getElementById("shortcut");
-        shortcut.textContent = command.shortcut || "not set";
-      }
+      var shortcut = document.getElementById(`${command.name}-shortcut`);
+      if (!shortcut) return;
+      shortcut.textContent = command.shortcut || "not set";
     });
   });
 
