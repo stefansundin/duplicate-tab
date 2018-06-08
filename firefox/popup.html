@@ -6,7 +6,9 @@
   <script src="popup.js"></script>
 </head>
 <body>
-  <p>Shortcut: <a id="shortcut">error</a>.</p>
+  <p>Shortcut: <input type="text" id="shortcut"> <button id="save">Save</button></p>
+  <p id="error"></p>
+  <p>You may not be able to override default Firefox shortcuts. <a target="_blank" href="https://developer.mozilla.org/en-US/Add-ons/WebExtensions/manifest.json/commands#Shortcut_values">See docs for possible values.</a></p>
   <p><label><input type="checkbox" id="background"> Open tab in background</label></p>
 </body>
 </html>
