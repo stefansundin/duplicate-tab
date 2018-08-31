@@ -31,6 +31,9 @@
     },
     "duplicate-to-new-window": {
       "description": "Duplicate to new window"
+    },
+    "move-to-new-window": {
+      "description": "Move tab to new window"
     }
   },
   "permissions": [

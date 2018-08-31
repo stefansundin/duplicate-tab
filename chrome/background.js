@@ -80,4 +80,51 @@ chrome.commands.onCommand.addListener(function(command) {
       }
     });
   }
+  else if (command == "move-to-new-window") {
+    chrome.permissions.request({
+      permissions: ["tabs"]
+    }, function(granted) {
+      if (granted) {
+        (() => {
+          const _currentTab = new Promise((resolve) => {
+            chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+              resolve(tabs[0])
+            })
+          });
+
+          const _currentWindow = new Promise((resolve) => {
+            chrome.windows.getCurrent((win) => resolve(win))
+          });
+
+          (async () => {
+            const currentTab = await _currentTab
+            const currentWindow = await _currentWindow
+
+            // Let's cherrypick the options we want to clone
+            const windowOpts = {
+              tabId: currentTab.id,
+              focused: true,
+              incognito: currentWindow.incognito,
+              type: currentWindow.type
+            }
+
+            // Cant set dimensions and pos manually for some states
+            if(['minimized', 'maximized', 'fullscreen'].indexOf(currentWindow.state) !== -1)
+            {
+              windowOpts.state = currentWindow.state
+            }
+            else {
+              windowOpts.top = currentWindow.top
+              windowOpts.left = currentWindow.left
+              windowOpts.height = currentWindow.height
+              windowOpts.width = currentWindow.width
+            }
+
+            chrome.windows.create(windowOpts)
+          })();
+
+        })();
+      }
+    });
+  }
 });
