@@ -80,7 +80,7 @@ chrome.commands.onCommand.addListener(function(command) {
       }
     });
   }
-  else if (command == "move-to-new-window") {
+  else if (command == "pop-out-to-new-window") {
     chrome.permissions.request({
       permissions: ["tabs"]
     }, function(granted) {
