@@ -30,7 +30,10 @@
       "description": "Duplicate the current tab"
     },
     "duplicate-to-new-window": {
-      "description": "Duplicate to new window"
+      "description": "Duplicate to a new window"
+    },
+    "pop-out-to-new-window": {
+      "description": "Pop highlighted tabs to a new window"
     }
   },
   "permissions": [
