@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
   var save = document.getElementById("save");
   save.addEventListener("click", function() {
-    if (document.getElementById("duplicate-to-new-window-shortcut").value != "" || document.getElementById("pop-out-to-new-window-shortcut").value != "") {
+    if (document.getElementById("duplicate-to-new-window-shortcut").value != "") {
       chrome.permissions.request({
         permissions: ["tabs"]
       });
