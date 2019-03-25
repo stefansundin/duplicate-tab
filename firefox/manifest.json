@@ -22,11 +22,13 @@
       "description": "Duplicate the current tab"
     },
     "duplicate-to-new-window": {
-      "description": "Duplicate to new window"
+      "description": "Duplicate to a new window"
     }
   },
   "permissions": [
-    "storage",
+    "storage"
+  ],
+  "optional_permissions": [
     "tabs"
   ],
   "applications": {

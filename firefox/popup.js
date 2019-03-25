@@ -2,6 +2,11 @@ var default_options = {
   background: false
 };
 
+var all_commands = [];
+chrome.commands.getAll(function(commands) {
+  all_commands = commands.map((c) => c.name);
+});
+
 function refresh_shortcuts() {
   chrome.commands.getAll(function(commands) {
     commands.forEach(function(command) {
@@ -16,10 +21,20 @@ document.addEventListener("DOMContentLoaded", function() {
   refresh_shortcuts();
 
   var save = document.getElementById("save");
+  save.addEventListener("click", function() {
+    if (document.getElementById("duplicate-to-new-window-shortcut").value != "") {
+      chrome.permissions.request({
+        permissions: ["tabs"]
+      }, function(granted) {
+        if (!granted) {
+          return;
+        }
+      });
+    }
+  });
   save.addEventListener("click", async function() {
     document.getElementById("error").innerText = "";
     try {
-      var all_commands = ["duplicate-tab", "duplicate-to-new-window"];
       for (var i=0; i < all_commands.length; i++) {
         var command = all_commands[i];
         var shortcut = document.getElementById(`${command}-shortcut`);
@@ -54,13 +69,56 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 
   var background = document.getElementById("background");
+  var revoke = document.getElementById("revoke");
+
   chrome.storage.sync.get(default_options, function(options) {
     background.checked = options.background;
+
+    chrome.permissions.contains({
+      permissions: ["tabs"]
+    }, function(result) {
+      revoke.disabled = !result;
+      if (!result) {
+        background.checked = false;
+      }
+    });
+
     background.addEventListener("change", function() {
-      var new_options = {
-        background: background.checked
-      };
-      chrome.storage.sync.set(new_options);
+      if (background.checked) {
+        chrome.permissions.request({
+          permissions: ["tabs"]
+        }, function(granted) {
+          if (granted) {
+            var new_options = {
+              background: true
+            };
+            chrome.storage.sync.set(new_options);
+          }
+          revoke.disabled = !granted;
+          background.checked = granted;
+        });
+      }
+      else {
+        var new_options = {
+          background: background.checked
+        };
+        chrome.storage.sync.set(new_options);
+      }
+    });
+  });
+
+  revoke.addEventListener("click", function() {
+    chrome.permissions.remove({
+      permissions: ["tabs"]
+    }, function(removed) {
+      if (removed) {
+        revoke.disabled = true;
+        background.checked = false;
+        var new_options = {
+          background: background.checked
+        };
+        chrome.storage.sync.set(new_options);
+      }
     });
   });
 });

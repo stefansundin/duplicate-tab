@@ -7,11 +7,13 @@
 </head>
 <body>
   <p>Duplicate tab shortcut: <input type="text" id="duplicate-tab-shortcut" placeholder="not set"></p>
-  <p>Duplicate to new window shortcut: <input type="text" id="duplicate-to-new-window-shortcut" placeholder="not set"></p>
+  <p>Note: In order to use the following shortcuts, you must grant additional permissions.</p>
+  <p>Duplicate to a new window shortcut: <input type="text" id="duplicate-to-new-window-shortcut" placeholder="not set"></p>
   <p><button id="save">Save</button></p>
   <p id="error"></p>
   <p>You may not be able to override default Firefox shortcuts. <a target="_blank" href="https://developer.mozilla.org/en-US/Add-ons/WebExtensions/manifest.json/commands#Shortcut_values">See docs for possible values.</a></p>
   <p><label><input type="checkbox" id="background"> Open new tabs in the background</label></p>
-  <p>Note: Opening tabs in the background does not preserve navigation history in the new tab.</p>
+  <p>Note: Opening tabs in the background requires more permissions, and does not preserve navigation history in the new tab.</p>
+  <p><button id="revoke">Revoke optional permissions</button></p>
 </body>
 </html>
