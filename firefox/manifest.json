@@ -26,6 +26,9 @@
     },
     "pop-out-to-new-window": {
       "description": "Pop highlighted tabs out to a new window"
+    },
+    "new-tab-to-the-right": {
+      "description": "New tab to the right"
     }
   },
   "permissions": [

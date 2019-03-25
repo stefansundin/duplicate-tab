@@ -128,4 +128,17 @@ chrome.commands.onCommand.addListener(function(command) {
       });
     })();
   }
+  else if (command == "new-tab-to-the-right") {
+    chrome.tabs.query({
+      currentWindow: true,
+      active: true,
+    }, function(tabs) {
+      var tab = tabs[0];
+      chrome.tabs.create({
+        active: true,
+        index: tab.index+1,
+        openerTabId: tab.id,
+      });
+    });
+  }
 });
