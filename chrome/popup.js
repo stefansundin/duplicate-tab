@@ -1,5 +1,5 @@
 var default_options = {
-  background: false
+  background: false,
 };
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function() {
       }
       else {
         var new_options = {
-          background: background.checked
+          background: background.checked,
         };
         chrome.storage.sync.set(new_options);
       }
@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", function() {
         revoke.disabled = true;
         background.checked = false;
         var new_options = {
-          background: background.checked
+          background: background.checked,
         };
         chrome.storage.sync.set(new_options);
       }

@@ -1,5 +1,5 @@
 var default_options = {
-  background: false
+  background: false,
 };
 
 chrome.runtime.onMessage.addListener(
@@ -10,7 +10,7 @@ chrome.runtime.onMessage.addListener(
       }, function(granted) {
         if (granted) {
           var new_options = {
-            background: true
+            background: true,
           };
           chrome.storage.sync.set(new_options);
         }
@@ -40,7 +40,7 @@ chrome.commands.onCommand.addListener(function(command) {
                 active: false,
                 index: tab.index+1,
                 openerTabId: tab.id,
-                url: tab.url
+                url: tab.url,
               });
             }
             else {
@@ -67,17 +67,18 @@ chrome.commands.onCommand.addListener(function(command) {
     chrome.permissions.request({
       permissions: ["tabs"]
     }, function(granted) {
-      if (granted) {
-        chrome.tabs.query({
-          currentWindow: true,
-          active: true,
-        }, function(tabs) {
-          var tab = tabs[0];
-          chrome.windows.create({
-            url: tab.url,
-          });
-        });
+      if (!granted) {
+        return;
       }
+      chrome.tabs.query({
+        currentWindow: true,
+        active: true,
+      }, function(tabs) {
+        var tab = tabs[0];
+        chrome.windows.create({
+          url: tab.url,
+        });
+      });
     });
   }
   else if (command == "pop-out-to-new-window") {

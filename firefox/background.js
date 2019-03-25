@@ -1,5 +1,5 @@
 var default_options = {
-  background: false
+  background: false,
 };
 
 chrome.commands.onCommand.addListener(function(command) {
@@ -16,7 +16,7 @@ chrome.commands.onCommand.addListener(function(command) {
             active: false,
             index: tab.index+1,
             openerTabId: tab.id,
-            url: tab.url
+            url: tab.url,
           });
         });
       }

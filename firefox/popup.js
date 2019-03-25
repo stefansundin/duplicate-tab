@@ -1,5 +1,5 @@
 var default_options = {
-  background: false
+  background: false,
 };
 
 var all_commands = [];
@@ -25,10 +25,6 @@ document.addEventListener("DOMContentLoaded", function() {
     if (document.getElementById("duplicate-to-new-window-shortcut").value != "" || document.getElementById("pop-out-to-new-window-shortcut").value != "") {
       chrome.permissions.request({
         permissions: ["tabs"]
-      }, function(granted) {
-        if (!granted) {
-          return;
-        }
       });
     }
   });
@@ -45,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function() {
         else {
           await browser.commands.update({
             name: command,
-            shortcut: shortcut.value
+            shortcut: shortcut.value,
           });
         }
       }
@@ -90,7 +86,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }, function(granted) {
           if (granted) {
             var new_options = {
-              background: true
+              background: true,
             };
             chrome.storage.sync.set(new_options);
           }
@@ -100,7 +96,7 @@ document.addEventListener("DOMContentLoaded", function() {
       }
       else {
         var new_options = {
-          background: background.checked
+          background: background.checked,
         };
         chrome.storage.sync.set(new_options);
       }
@@ -115,7 +111,7 @@ document.addEventListener("DOMContentLoaded", function() {
         revoke.disabled = true;
         background.checked = false;
         var new_options = {
-          background: background.checked
+          background: background.checked,
         };
         chrome.storage.sync.set(new_options);
       }
