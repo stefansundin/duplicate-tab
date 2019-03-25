@@ -33,7 +33,7 @@
       "description": "Duplicate to a new window"
     },
     "pop-out-to-new-window": {
-      "description": "Pop highlighted tabs to a new window"
+      "description": "Pop highlighted tabs out to a new window"
     }
   },
   "permissions": [
