@@ -25,6 +25,8 @@ document.addEventListener("DOMContentLoaded", function() {
     if (document.getElementById("duplicate-to-new-window-shortcut").value != "") {
       chrome.permissions.request({
         permissions: ["tabs"]
+      }, function(granted) {
+        revoke.disabled = !granted;
       });
     }
   });
