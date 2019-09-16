@@ -3,3 +3,16 @@ body {
   min-height: 300px;
   font-size: large;
 }
+
+@media all and (prefers-color-scheme: dark) {
+  body {
+    background-color: #202123;
+    color: #888f96;
+  }
+  a {
+    color: #aeb9c4;
+  }
+  a:active {
+    color: #888f96;
+  }
+}
