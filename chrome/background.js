@@ -1,4 +1,4 @@
-var default_options = {
+const default_options = {
   background: false,
 };
 
@@ -9,7 +9,7 @@ chrome.runtime.onMessage.addListener(
         permissions: ["tabs"]
       }, function(granted) {
         if (granted) {
-          var new_options = {
+          const new_options = {
             background: true,
           };
           chrome.storage.sync.set(new_options);
@@ -33,7 +33,7 @@ chrome.commands.onCommand.addListener(function(command) {
             currentWindow: true,
             active: true,
           }, function(tabs) {
-            var tab = tabs[0];
+            const tab = tabs[0];
             if (granted) {
               // Permissions were granted
               chrome.tabs.create({
@@ -56,7 +56,7 @@ chrome.commands.onCommand.addListener(function(command) {
           currentWindow: true,
           active: true,
         }, function(tabs) {
-          var tab = tabs[0];
+          const tab = tabs[0];
           chrome.tabs.duplicate(tab.id);
         });
       }
@@ -74,7 +74,7 @@ chrome.commands.onCommand.addListener(function(command) {
         currentWindow: true,
         active: true,
       }, function(tabs) {
-        var tab = tabs[0];
+        const tab = tabs[0];
         chrome.windows.create({
           url: tab.url,
         });
@@ -133,7 +133,7 @@ chrome.commands.onCommand.addListener(function(command) {
       currentWindow: true,
       active: true,
     }, function(tabs) {
-      var tab = tabs[0];
+      const tab = tabs[0];
       chrome.tabs.create({
         active: true,
         index: tab.index+1,

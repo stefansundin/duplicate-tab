@@ -1,11 +1,11 @@
-var default_options = {
+const default_options = {
   background: false,
 };
 
 document.addEventListener("DOMContentLoaded", function() {
-  var links = document.getElementsByTagName("a");
-  for (var i=0; i < links.length; i++) {
-    var link = links[i];
+  const links = document.getElementsByTagName("a");
+  for (let i=0; i < links.length; i++) {
+    const link = links[i];
     if (link.href.substr(0,9) == "chrome://") {
       link.addEventListener("click", function() {
         chrome.tabs.create({ url: this.href });
@@ -15,14 +15,14 @@ document.addEventListener("DOMContentLoaded", function() {
 
   chrome.commands.getAll(function(commands) {
     commands.forEach(function(command) {
-      var shortcut = document.getElementById(`${command.name}-shortcut`);
+      const shortcut = document.getElementById(`${command.name}-shortcut`);
       if (!shortcut) return;
       shortcut.textContent = command.shortcut || "not set";
     });
   });
 
-  var background = document.getElementById("background");
-  var revoke = document.getElementById("revoke");
+  const background = document.getElementById("background");
+  const revoke = document.getElementById("revoke");
 
   chrome.storage.sync.get(default_options, function(options) {
     background.checked = options.background;
@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
       }
       else {
-        var new_options = {
+        const new_options = {
           background: background.checked,
         };
         chrome.storage.sync.set(new_options);
@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function() {
       if (removed) {
         revoke.disabled = true;
         background.checked = false;
-        var new_options = {
+        const new_options = {
           background: background.checked,
         };
         chrome.storage.sync.set(new_options);

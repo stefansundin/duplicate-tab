@@ -1,4 +1,4 @@
-var default_options = {
+const default_options = {
   background: false,
 };
 
@@ -11,7 +11,7 @@ chrome.commands.onCommand.addListener(function(command) {
           currentWindow: true,
           active: true,
         }, function(tabs) {
-          var tab = tabs[0];
+          const tab = tabs[0];
           chrome.tabs.create({
             active: false,
             index: tab.index+1,
@@ -26,7 +26,7 @@ chrome.commands.onCommand.addListener(function(command) {
           currentWindow: true,
           active: true,
         }, function(tabs) {
-          var tab = tabs[0];
+          const tab = tabs[0];
           chrome.tabs.duplicate(tab.id);
         });
       }
@@ -37,7 +37,7 @@ chrome.commands.onCommand.addListener(function(command) {
       currentWindow: true,
       active: true,
     }, function(tabs) {
-      var tab = tabs[0];
+      const tab = tabs[0];
       chrome.windows.create({
         url: tab.url,
       });
@@ -94,7 +94,7 @@ chrome.commands.onCommand.addListener(function(command) {
       currentWindow: true,
       active: true,
     }, function(tabs) {
-      var tab = tabs[0];
+      const tab = tabs[0];
       chrome.tabs.create({
         active: true,
         index: tab.index+1,
