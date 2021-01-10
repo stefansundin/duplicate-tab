@@ -1,3 +1,15 @@
 body, button {
   font-size: large;
 }
+
+p {
+  margin: 0 0 1em 0;
+}
+
+img[src="chrome://global/skin/icons/settings.svg"] {
+  width: 16px;
+  height: 16px;
+  color: rgb(12, 12, 13);
+  -moz-context-properties: fill;
+  fill: currentColor;
+}

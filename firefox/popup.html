@@ -6,16 +6,11 @@
   <script src="popup.js"></script>
 </head>
 <body>
-  <p>Duplicate tab shortcut: <input type="text" id="duplicate-tab-shortcut" placeholder="not set"></p>
-  <p>
-    Duplicate to a new window shortcut: <input type="text" id="duplicate-to-new-window-shortcut" placeholder="not set"><br>
-    Note: This shortcut requires additional permissions.
-  </p>
-  <p>Pop tab out to a new window shortcut: <input type="text" id="pop-out-to-new-window-shortcut" placeholder="not set"></p>
-  <p>New tab to the right shortcut: <input type="text" id="new-tab-to-the-right-shortcut" placeholder="not set"></p>
-  <p><button id="save">Save</button></p>
-  <p id="error"></p>
-  <p>You may not be able to override default Firefox shortcuts. <a target="_blank" href="https://developer.mozilla.org/en-US/Add-ons/WebExtensions/manifest.json/commands#Shortcut_values">See docs for possible values.</a></p>
+  <p>To configure the shortcuts, click the <img src="chrome://global/skin/icons/settings.svg"> button in the upper right corner and then click <strong>Manage Extension Shortcuts</strong>.</p>
+  <p>Duplicate tab shortcut: <span id="duplicate-tab-shortcut">error</span></p>
+  <p>Duplicate to a new window shortcut: <span id="duplicate-to-new-window-shortcut">error</span>.</p>
+  <p>Pop tab out to a new window shortcut: <span id="pop-out-to-new-window-shortcut">error</span>.</p>
+  <p>New tab to the right shortcut: <span id="new-tab-to-the-right-shortcut">error</span>.</p>
   <p><label><input type="checkbox" id="background"> Open new tabs in the background</label></p>
   <p>Note: Opening tabs in the background requires more permissions, and does not preserve navigation history in the new tab.</p>
   <p><button id="revoke">Revoke optional permissions</button></p>
