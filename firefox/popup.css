@@ -13,3 +13,19 @@ img[src="chrome://global/skin/icons/settings.svg"] {
   -moz-context-properties: fill;
   fill: currentColor;
 }
+
+@media all and (prefers-color-scheme: dark) {
+  body {
+    background-color: #202123;
+    color: #b1b1b3;
+  }
+  a {
+    color: #aeb9c4;
+  }
+  a:active {
+    color: #888f96;
+  }
+  img[src="chrome://global/skin/icons/settings.svg"] {
+    color: rgb(249, 249, 250);
+  }
+}
