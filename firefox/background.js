@@ -12,11 +12,12 @@ chrome.commands.onCommand.addListener(function(command) {
           active: true,
         }, function(tabs) {
           const tab = tabs[0];
+          const url = tab.hasOwnProperty("url") ? tab.url : chrome.extension.getURL("permissions.html");
           chrome.tabs.create({
             active: false,
             index: tab.index+1,
             openerTabId: tab.id,
-            url: tab.url,
+            url: url,
           });
         });
       }
@@ -38,8 +39,9 @@ chrome.commands.onCommand.addListener(function(command) {
       active: true,
     }, function(tabs) {
       const tab = tabs[0];
+      const url = tab.hasOwnProperty("url") ? tab.url : chrome.extension.getURL("permissions.html");
       chrome.windows.create({
-        url: tab.url,
+        url: url,
       });
     });
   }
@@ -64,7 +66,7 @@ chrome.commands.onCommand.addListener(function(command) {
         type: currentWindow.type,
         incognito: currentWindow.incognito,
         tabId: tabs[0].id, // this removes the tab from the old window
-      }
+      };
 
       // Can't set dimensions and position for some states
       if (["minimized", "maximized", "fullscreen"].includes(currentWindow.state)) {
