@@ -38,9 +38,10 @@
   "optional_permissions": [
     "tabs"
   ],
-  "applications": {
+  "browser_specific_settings": {
     "gecko": {
-      "id": "duplicate-tab@firefox.stefansundin.com"
+      "id": "duplicate-tab@firefox.stefansundin.com",
+      "strict_min_version": "77.0"
     }
   }
 }
