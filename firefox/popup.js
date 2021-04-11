@@ -51,17 +51,35 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 
   revoke.addEventListener("click", function() {
+    background.checked = false;
     chrome.permissions.remove({
       permissions: ["tabs"]
     }, function(removed) {
       if (removed) {
         revoke.disabled = true;
-        background.checked = false;
         const new_options = {
           background: background.checked,
         };
         chrome.storage.sync.set(new_options);
       }
     });
+  });
+
+  browser.permissions.onAdded.addListener(function(permissions) {
+    if (permissions.permissions.includes("tabs")) {
+      revoke.disabled = false;
+      if (background.indeterminate) {
+        background.indeterminate = false;
+      }
+    }
+  });
+
+  browser.permissions.onRemoved.addListener(function(permissions) {
+    if (permissions.permissions.includes("tabs")) {
+      revoke.disabled = true;
+      if (background.checked) {
+        background.indeterminate = true;
+      }
+    }
   });
 });
