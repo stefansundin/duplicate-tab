@@ -21,8 +21,8 @@ document.addEventListener("DOMContentLoaded", function() {
       permissions: ["tabs"]
     }, function(result) {
       revoke.disabled = !result;
-      if (!result) {
-        background.checked = false;
+      if (!result && background.checked) {
+        background.indeterminate = true;
       }
     });
 
