@@ -12,7 +12,12 @@ browser.commands.onCommand.addListener(async command => {
     if (tabs.length === 1) {
       // Handle the simple case with a single tab separately
       const tab = tabs[0];
-      await browser.tabs.duplicate(tab.id);
+      const newTab = await browser.tabs.duplicate(tab.id);
+      if (tab.pinned) {
+        // Firefox only:
+        await browser.tabs.update(newTab.id, { pinned: true });
+        await browser.tabs.move(newTab.id, { index: tab.index + 1 });
+      }
       if (options.background) {
         // Focus the old tab
         await browser.tabs.update(tab.id, { active: true });
@@ -31,6 +36,7 @@ browser.commands.onCommand.addListener(async command => {
         newTabs.push(newTab);
         let newIndex;
         if (tab.pinned) {
+          await browser.tabs.update(newTab.id, { pinned: true }); // Firefox only
           newIndex = lastPinnedTab.index + pinnedIndex + 1;
           pinnedIndex++;
         } else {
