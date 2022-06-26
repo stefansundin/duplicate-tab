@@ -2,106 +2,160 @@ const default_options = {
   background: false,
 };
 
-chrome.commands.onCommand.addListener(function(command) {
-  if (command == "duplicate-tab") {
-    chrome.storage.sync.get(default_options, function(options) {
-      if (options.background) {
-        // Open tab in background
-        chrome.tabs.query({
-          currentWindow: true,
-          active: true,
-        }, function(tabs) {
-          const tab = tabs[0];
-          const url = tab.hasOwnProperty("url") ? tab.url : chrome.extension.getURL("permissions.html");
-          chrome.tabs.create({
-            active: false,
-            index: tab.index+1,
-            openerTabId: tab.id,
-            url: url,
-          });
-        });
-      }
-      else {
-        // Open tab in foreground
-        chrome.tabs.query({
-          currentWindow: true,
-          active: true,
-        }, function(tabs) {
-          const tab = tabs[0];
-          chrome.tabs.duplicate(tab.id);
-        });
-      }
-    });
-  }
-  else if (command == "duplicate-to-new-window") {
-    chrome.tabs.query({
+browser.commands.onCommand.addListener(async command => {
+  if (command == 'duplicate-tab') {
+    const options = await browser.storage.sync.get(default_options);
+    const tabs = await browser.tabs.query({
       currentWindow: true,
-      active: true,
-    }, function(tabs) {
-      const tab = tabs[0];
-      const url = tab.hasOwnProperty("url") ? tab.url : chrome.extension.getURL("permissions.html");
-      chrome.windows.create({
-        url: url,
-      });
+      highlighted: true,
     });
-  }
-  else if (command == "pop-out-to-new-window") {
-    (async () => {
-      const currentWindow = await new Promise((resolve) => {
-        chrome.windows.getCurrent((wnd) => {
-          resolve(wnd);
-        });
-      });
-      const tabs = await new Promise((resolve) => {
-        chrome.tabs.query({
-          currentWindow: true,
-          highlighted: true,
-        }, (tabs) => {
-          resolve(tabs);
-        })
-      });
-
-      // Cherrypick the options we want to clone
-      const windowOpts = {
-        type: currentWindow.type,
-        incognito: currentWindow.incognito,
-        tabId: tabs[0].id, // this removes the tab from the old window
-      };
-
-      // Can't set dimensions and position for some states
-      if (["minimized", "maximized", "fullscreen"].includes(currentWindow.state)) {
-        windowOpts.state = currentWindow.state;
+    if (tabs.length === 1) {
+      // Handle the simple case with a single tab separately
+      const tab = tabs[0];
+      await browser.tabs.duplicate(tab.id);
+      if (options.background) {
+        // Focus the old tab
+        await browser.tabs.update(tab.id, { active: true });
       }
-      else {
-        windowOpts.top = currentWindow.top;
-        windowOpts.left = currentWindow.left;
-        windowOpts.height = currentWindow.height;
-        windowOpts.width = currentWindow.width;
+    } else {
+      const pinnedTabs = tabs.filter(t => t.pinned);
+      const lastPinnedTab = pinnedTabs[pinnedTabs.length - 1];
+      const lastTab = tabs[tabs.length - 1];
+      const newTabs = [];
+      let pinnedIndex = 0;
+      let index = 0;
+      let tabToActivate;
+      let tabToDeactivate;
+      for (const tab of tabs) {
+        const newTab = await browser.tabs.duplicate(tab.id);
+        newTabs.push(newTab);
+        let newIndex;
+        if (tab.pinned) {
+          newIndex = lastPinnedTab.index + pinnedIndex + 1;
+          pinnedIndex++;
+        } else {
+          newIndex = pinnedTabs.length + lastTab.index + index + 1;
+          index++;
+        }
+        await browser.tabs.move(newTab.id, { index: newIndex });
+        if (tab.active) {
+          tabToActivate = options.background ? tab : newTab;
+        }
+        if (options.background) {
+          tabToDeactivate = newTab;
+        }
       }
+      for (const tab of options.background ? tabs : newTabs) {
+        await browser.tabs.update(tab.id, { highlighted: true });
+      }
+      if (tabToDeactivate) {
+        await browser.tabs.update(tabToDeactivate.id, { highlighted: false });
+      }
+      await browser.tabs.update(tabToActivate.id, { highlighted: false });
+      await browser.tabs.update(tabToActivate.id, { highlighted: true });
+    }
+  } else if (command == 'duplicate-to-new-window') {
+    const options = await browser.storage.sync.get(default_options);
+    const currentWindow = await browser.windows.getCurrent();
+    const tabs = await browser.tabs.query({
+      currentWindow: true,
+      highlighted: true,
+    });
 
-      chrome.windows.create(windowOpts, function(newWindow) {
-        chrome.tabs.move(tabs.slice(1).map((t) => t.id), {
+    // Duplicate and move new tabs to a new window
+    let newWindow;
+    const newTabs = [];
+    const tabsToActivate = [];
+    for (const tab of tabs) {
+      const newTab = await browser.tabs.duplicate(tab.id);
+      newTabs.push(newTab);
+      if (newWindow) {
+        await browser.tabs.move(newTab.id, {
           windowId: newWindow.id,
           index: -1,
         });
-        tabs.filter((t) => t.pinned).forEach((t) => {
-          chrome.tabs.update(t.id, { pinned: true });
+      } else {
+        newWindow = await browser.windows.create({
+          type: currentWindow.type,
+          incognito: currentWindow.incognito,
+          tabId: newTab.id, // This removes the tab from the old window
+          focused: !options.background,
         });
-        chrome.tabs.update(tabs.find((t) => t.active).id, { active: true });
-      });
-    })();
-  }
-  else if (command == "new-tab-to-the-right") {
-    chrome.tabs.query({
+      }
+      if (tab.pinned) {
+        await browser.tabs.update(newTab.id, { pinned: true });
+      }
+      if (tab.active) {
+        tabsToActivate.push(tab);
+        tabsToActivate.push(newTab);
+      }
+    }
+
+    // Highlight tabs
+    for (const tab of tabs) {
+      await browser.tabs.update(tab.id, { highlighted: true });
+    }
+    for (const tab of newTabs) {
+      await browser.tabs.update(tab.id, { highlighted: true });
+    }
+    for (const tabToActivate of tabsToActivate) {
+      await browser.tabs.update(tabToActivate.id, { highlighted: false });
+      await browser.tabs.update(tabToActivate.id, { highlighted: true });
+    }
+  } else if (command == 'pop-out-to-new-window') {
+    const options = await browser.storage.sync.get(default_options);
+    const currentWindow = await browser.windows.getCurrent();
+    const tabs = await browser.tabs.query({
+      currentWindow: true,
+      highlighted: true,
+    });
+    const activeTab = tabs.find(t => t.active);
+
+    // Move tabs to a new window
+    let newWindow;
+    for (const tab of tabs) {
+      if (newWindow) {
+        await browser.tabs.move(tab.id, {
+          windowId: newWindow.id,
+          index: -1,
+        });
+      } else {
+        newWindow = await browser.windows.create({
+          type: currentWindow.type,
+          incognito: currentWindow.incognito,
+          tabId: tab.id, // This removes the tab from the old window
+          focused: !options.background,
+        });
+      }
+      if (tab.pinned) {
+        await browser.tabs.update(tab.id, { pinned: true });
+      }
+    }
+
+    // Highlight tabs
+    for (const tab of tabs) {
+      await browser.tabs.update(tab.id, { highlighted: true });
+    }
+    await browser.tabs.update(activeTab.id, { highlighted: false });
+    await browser.tabs.update(activeTab.id, { highlighted: true });
+  } else if (command == 'new-tab-to-the-right') {
+    const [tab] = await browser.tabs.query({
       currentWindow: true,
       active: true,
-    }, function(tabs) {
-      const tab = tabs[0];
-      chrome.tabs.create({
-        active: true,
-        index: tab.index+1,
-        openerTabId: tab.id,
-      });
     });
+    const newTab = await browser.tabs.create({
+      active: true,
+      pinned: tab.pinned,
+      index: tab.index + 1,
+      openerTabId: tab.id,
+    });
+    if (tab.groupId !== -1 && newTab.groupId === -1) {
+      // This is only needed when performing the action on the right-most tab of a group
+      // When used on other tabs in the group, the new tab is automatically grouped
+      browser.tabs.group({
+        groupId: tab.groupId,
+        tabIds: [newTab.id],
+      });
+    }
   }
 });
