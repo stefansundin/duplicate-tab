@@ -87,6 +87,12 @@ browser.commands.onCommand.addListener(async command => {
           tabId: newTab.id, // This removes the tab from the old window
           focused: !options.background,
         });
+        if (options.background) {
+          // Firefox bug: doesn't respect the "focused: false" attribute in browser.windows.create, so manually focus the old window again
+          await browser.windows.update(currentWindow.id, {
+            focused: true,
+          });
+        }
       }
       if (tab.pinned) {
         await browser.tabs.update(newTab.id, { pinned: true });
@@ -132,6 +138,12 @@ browser.commands.onCommand.addListener(async command => {
           tabId: tab.id, // This removes the tab from the old window
           focused: !options.background,
         });
+        if (options.background) {
+          // Firefox bug: doesn't respect the "focused: false" attribute in browser.windows.create, so manually focus the old window again
+          await browser.windows.update(currentWindow.id, {
+            focused: true,
+          });
+        }
       }
       if (tab.pinned) {
         await browser.tabs.update(tab.id, { pinned: true });
