@@ -20,4 +20,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       background: background.checked,
     }),
   );
+
+  if (await browser.extension.isAllowedIncognitoAccess()) {
+    document.getElementById('allow-in-incognito-notice').style.display = 'none';
+  }
 });

@@ -3,6 +3,10 @@ const default_options = {
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
+  document.getElementById(
+    'extension-settings-link',
+  ).href = `chrome://extensions/?id=${chrome.runtime.id}`;
+
   for (const link of document.getElementsByTagName('a')) {
     if (link.href.startsWith('chrome://')) {
       link.addEventListener('click', function (e) {
@@ -29,4 +33,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       background: background.checked,
     }),
   );
+
+  if (!(await chrome.extension.isAllowedIncognitoAccess())) {
+    document.getElementById('allow-in-incognito-notice').style.display =
+      'inline';
+  }
 });
