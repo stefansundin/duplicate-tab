@@ -136,8 +136,7 @@ chrome.commands.onCommand.addListener(async command => {
     for (const tab of tabs) {
       await chrome.tabs.update(tab.id, { highlighted: true });
     }
-    await chrome.tabs.update(activeTab.id, { highlighted: false });
-    await chrome.tabs.update(activeTab.id, { highlighted: true });
+    await chrome.tabs.update(activeTab.id, { active: true });
   } else if (command == 'new-tab-to-the-right') {
     const [tab] = await chrome.tabs.query({
       currentWindow: true,

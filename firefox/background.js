@@ -154,8 +154,7 @@ browser.commands.onCommand.addListener(async command => {
     for (const tab of tabs) {
       await browser.tabs.update(tab.id, { highlighted: true });
     }
-    await browser.tabs.update(activeTab.id, { highlighted: false });
-    await browser.tabs.update(activeTab.id, { highlighted: true });
+    await browser.tabs.update(activeTab.id, { active: true });
   } else if (command == 'new-tab-to-the-right') {
     const [tab] = await browser.tabs.query({
       currentWindow: true,
