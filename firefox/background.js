@@ -155,6 +155,35 @@ browser.commands.onCommand.addListener(async command => {
       await browser.tabs.update(tab.id, { highlighted: true });
     }
     await browser.tabs.update(activeTab.id, { active: true });
+  } else if (command == 'pop-out-to-new-incognito-window') {
+    const options = await browser.storage.sync.get(default_options);
+    const currentWindow = await browser.windows.getCurrent();
+    const tabs = await browser.tabs.query({
+      currentWindow: true,
+      highlighted: true,
+    });
+    const activeTabIndex = tabs.findIndex(t => t.active);
+
+    // Create an incognito window with the tab URLs and then try to restore the state properly
+    // If the window is already an incognito window then it creates a non-incognito window
+    // This obviously does not preserve tab history
+    const newWindow = await browser.windows.create({
+      type: currentWindow.type,
+      incognito: !currentWindow.incognito,
+      url: tabs.map(t => t.url),
+      focused: !options.background,
+    });
+    for (let i = 0; i < tabs.length; i++) {
+      if (tabs[i].pinned) {
+        await browser.tabs.update(newWindow.tabs[i].id, { pinned: true });
+      }
+    }
+    await browser.tabs.update(newWindow.tabs[activeTabIndex].id, {
+      active: true,
+    });
+
+    // Close the original tabs
+    await browser.tabs.remove(tabs.map(t => t.id));
   } else if (command == 'new-tab-to-the-right') {
     const [tab] = await browser.tabs.query({
       currentWindow: true,

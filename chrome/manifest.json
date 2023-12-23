@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Duplicate Tab Shortcut",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "Press Alt+Shift+D to duplicate the current tab (Option+Shift+D on Mac). Shortcut is configurable.",
   "homepage_url": "https://github.com/stefansundin/duplicate-tab",
   "author": "Stefan Sundin",
@@ -35,12 +35,16 @@
     "pop-out-to-new-window": {
       "description": "Pop tab out to a new window"
     },
+    "pop-out-to-new-incognito-window": {
+      "description": "Pop tab out to a new incognito window (does not preserve tab history!)"
+    },
     "new-tab-to-the-right": {
       "description": "New tab to the right"
     }
   },
   "permissions": [
-    "storage"
+    "storage",
+    "tabs"
   ],
   "minimum_chrome_version": "96"
 }
