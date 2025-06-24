@@ -3,6 +3,15 @@ const default_options = {
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
+  for (const link of document.getElementsByTagName('a')) {
+    if (link.href === 'chrome://extensions/shortcuts') {
+      link.addEventListener('click', function (e) {
+        e.preventDefault();
+        browser.commands.openShortcutSettings().then(() => window.close()).catch(console.error);
+      });
+    }
+  }
+
   const commands = await browser.commands.getAll();
   for (const command of commands) {
     const shortcut = document.getElementById(`${command.name}-shortcut`);
