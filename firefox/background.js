@@ -89,6 +89,7 @@ browser.commands.onCommand.addListener(async command => {
         });
         if (options.background) {
           // Firefox bug: doesn't respect the "focused: false" attribute in browser.windows.create, so manually focus the old window again
+          // https://bugzilla.mozilla.org/show_bug.cgi?id=1253129
           await browser.windows.update(currentWindow.id, {
             focused: true,
           });
@@ -140,6 +141,7 @@ browser.commands.onCommand.addListener(async command => {
         });
         if (options.background) {
           // Firefox bug: doesn't respect the "focused: false" attribute in browser.windows.create, so manually focus the old window again
+          // https://bugzilla.mozilla.org/show_bug.cgi?id=1253129
           await browser.windows.update(currentWindow.id, {
             focused: true,
           });
